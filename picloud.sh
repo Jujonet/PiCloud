@@ -20,11 +20,15 @@ function main(){
 
   # Create compressed backup of sd card image
   echo "Creating backup. This may take a while."
-  set -e
-  sudo mount -a
-  sudo dd if=/dev/mmcblk0p7 bs=1M | gzip > /mnt/MyCloud/images/"$(date +%d-%b-%y_%T)".gz
-  set +e
-  echo "Backup complete at $(date +%d-%b-%y_%T)"
+  if sudo mount -a; then
+    sudo dd if=/dev/mmcblk0p7 bs=1M | gzip > /mnt/MyCloud/images/"$(date +%d-%b-%y_%T)".gz
+    echo "Backup complete at $(date +%d-%b-%y_%T)"
+  else
+    echo "Mounting MyCloud failed"
+    exit 1
+  fi
+
+  exit 0
 }
 
 # Setup auto mount for MyCloud in /etc/fstab and create mount dir
@@ -35,11 +39,14 @@ function setup() {
   local automount="//$ip/raspi /mnt/MyCloud cifs username=$user,password=$pass,iocharset=utf8,file_mode=0777,dir_mode=0777 0 0"
 
   echo "Running setup..."
-  set -e
   sudo mkdir /mnt/MyCloud
-  echo "$automount" >> /etc/fstab
-  sudo mount -a
-  set +e
+  echo "$automount" | sudo tee -a /etc/fstab > /dev/null
+
+  if ! sudo mount -a; then
+    sudo rmdir /mnt/MyCloud
+    echo "Mounting MyCloud failed during setup"
+    exit 1
+  fi
   echo "Setup done!"
 }
 
