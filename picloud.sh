@@ -1,0 +1,59 @@
+#!/bin/bash
+# PiCloud - backup your Raspberry Pi SD card image to a Western Digital
+# MyCloud network attached storage drive
+
+function main(){
+  while getopts "s:" opt; do
+    case $opt in
+      s )
+          set -f
+          IFS=' '
+          array=($OPTARG)
+          setup "${array[@]}"
+          ;;
+      * )
+          usage
+          exit 1
+          ;;
+    esac
+  done
+
+  # Create compressed backup of sd card image
+  echo "Creating backup. This may take a while."
+  set -e
+  sudo mount -a
+  sudo dd if=/dev/mmcblk0p7 bs=1M | gzip > /mnt/MyCloud/images/"$(date +%d-%b-%y_%T)".gz
+  set +e
+  echo "Backup complete at $(date +%d-%b-%y_%T)"
+}
+
+# Setup auto mount for MyCloud in /etc/fstab and create mount dir
+function setup() {
+  local ip="$1"
+  local user="$2"
+  local pass="$3"
+  local automount="//$ip/raspi /mnt/MyCloud cifs username=$user,password=$pass,iocharset=utf8,file_mode=0777,dir_mode=0777 0 0"
+
+  echo "Running setup..."
+  set -e
+  sudo mkdir /mnt/MyCloud
+  echo "$automount" >> /etc/fstab
+  sudo mount -a
+  set +e
+  echo "Setup done!"
+}
+
+# Display usage message
+function usage() {
+	cat <<-USAGEMESSAGE
+	Usage: ./picloud [options]
+	Create a SD card image backup for a Raspberry Pi and write it to
+	a Western Digital MyCloud share mounted at /mnt/MyCloud
+
+	Options:
+	-s "i u p" setup auto mount for MyCloud at i ip address with username u and
+	password p (MUST run before first backup)
+	USAGEMESSAGE
+}
+
+main "$@"
