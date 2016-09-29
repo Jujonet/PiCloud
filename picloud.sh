@@ -6,15 +6,15 @@ function main(){
   while getopts "s:" opt; do
     case $opt in
       s )
-          set -f
-          IFS=' '
-          array=($OPTARG)
-          setup "${array[@]}"
-          ;;
+        set -f
+        IFS=' '
+        array=($OPTARG)
+        setup "${array[@]}"
+        ;;
       * )
-          usage
-          exit 1
-          ;;
+        usage
+        exit 1
+        ;;
     esac
   done
 
@@ -50,7 +50,7 @@ function setup() {
   echo "Setup done!"
 }
 
-# Display usage message
+# Display usage message - raw tabs here mandatory
 function usage() {
 	cat <<-USAGEMESSAGE
 	Usage: ./picloud [options]
