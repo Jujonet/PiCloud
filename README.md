@@ -3,8 +3,9 @@ Script to backup Raspberry Pi SD card image to a Western Digital My Cloud
 network attached storage drive.
 
 ## Requirements
-- A Raspberry Pi with a share named "raspi" with public access
-- A Western Digital MyCloud (or other network drive)
+- A Raspberry Pi (tested on RPi 2)
+- A Western Digital MyCloud (or other network drive) with a share named
+"raspi" with public access
 
 ## Before starting
 Please note that creating the image and writing it to the MyCloud may take
