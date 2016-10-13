@@ -19,14 +19,14 @@ and entry in /etc/fstab for the drive to mount on boot. Pass arguments that
 specify the WD MyCloud IP on your network, and the username/password to
 the "raspi" share. Example:
 ```
-./picloud -s "192.168.1.48 username password"
+sudo ./picloud.sh -s "192.168.1.48 username password"
 ```
 
 ## Backup
 Run the backup script any time you want to backup a new SD card image to the
 MyCloud. SD card images are placed in date-stamped directories within /raspi/images
 ```
-./picloud.sh
+sudo ./picloud.sh
 ```
 
 ## Potential improvements

@@ -20,8 +20,8 @@ function main(){
 
   # Create compressed backup of sd card image
   echo "Creating backup. This may take a while."
-  if sudo mount -a; then
-    sudo dd if=/dev/mmcblk0p7 bs=1M | gzip > /mnt/MyCloud/images/"$(date +%d-%b-%y_%T)".gz
+  if mount -a; then
+    dd if=/dev/mmcblk0p7 bs=1M | gzip > /mnt/MyCloud/images/"$(date +%d-%b-%y_%T)".gz
     echo "Backup complete at $(date +%d-%b-%y_%T)"
   else
     echo "Mounting MyCloud failed"
@@ -39,11 +39,11 @@ function setup() {
   local automount="//$ip/raspi /mnt/MyCloud cifs username=$user,password=$pass,iocharset=utf8,file_mode=0777,dir_mode=0777 0 0"
 
   echo "Running setup..."
-  sudo mkdir /mnt/MyCloud
-  echo "$automount" | sudo tee -a /etc/fstab > /dev/null
+  mkdir /mnt/MyCloud
+  echo "$automount" | tee -a /etc/fstab > /dev/null
 
-  if ! sudo mount -a; then
-    sudo rmdir /mnt/MyCloud
+  if ! mount -a; then
+    rmdir /mnt/MyCloud
     echo "Mounting MyCloud failed during setup"
     exit 1
   fi
