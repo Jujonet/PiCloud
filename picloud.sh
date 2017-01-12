@@ -20,9 +20,9 @@ function main(){
 
   # Create compressed backup of sd card image
   echo "Creating backup. This may take a while."
-  if mountpoint -q /mnt/MyCloud; then
-    dd if=/dev/mmcblk0p7 bs=1M | gzip > /mnt/MyCloud/images/"$(date +%d-%b-%y_%T)".gz
-    echo "Backup complete at $(date +%d-%b-%y_%T)"
+  if mount -a; then
+    dd if=/dev/mmcblk0p7 bs=1M | gzip > /mnt/MyCloud/images/"$(date +%FT%T)".gz
+    echo "Backup complete at $(date +%FT%T)"
   else
     echo "MyCloud is not mounted"
     exit 1
