@@ -24,7 +24,7 @@ function main(){
     dd if=/dev/mmcblk0p7 bs=64k | gzip > /mnt/MyCloud/images/"$(date +%d-%b-%y_%T)".gz
     echo "Backup complete at $(date +%d-%b-%y_%T)"
   else
-    echo "Mounting MyCloud failed"
+    echo "MyCloud is not mounted"
     exit 1
   fi
 
