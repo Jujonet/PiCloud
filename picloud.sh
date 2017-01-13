@@ -42,7 +42,7 @@ function setup() {
   mkdir /mnt/MyCloud
   echo "$automount" | tee -a /etc/fstab > /dev/null
 
-  if ! mount -a; then
+  if ! (mountpoint -q /mnt/MyCloud); then
     rmdir /mnt/MyCloud
     echo "Mounting MyCloud failed during setup"
     exit 1
