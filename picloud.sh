@@ -20,12 +20,12 @@ function main(){
 
   # Create compressed backup of sd card image
   echo "Creating backup. This may take a while."
-  if mount -a; then
-	sync # Syncs files in cache
-    dd if=/dev/mmcblk0p7 bs=1M | gzip > /mnt/MyCloud/images/"$(date +%d-%b-%y_%T)".gz
-    echo "Backup complete at $(date +%d-%b-%y_%T)"
+  if mountpoint -q /mnt/MyCloud; then
+    sync # Syncs files in cache
+    dd if=/dev/mmcblk0 bs=64k | gzip > /mnt/MyCloud/images/"$(date +%FT%T)".gz
+    echo "Backup complete at $(date +%FT%T)"
   else
-    echo "Mounting MyCloud failed"
+    echo "MyCloud is not mounted. Please go through setup"
     exit 1
   fi
 
@@ -43,7 +43,7 @@ function setup() {
   mkdir /mnt/MyCloud
   echo "$automount" | tee -a /etc/fstab > /dev/null
 
-  if ! mount -a; then
+  if ! (mountpoint -q /mnt/MyCloud); then
     rmdir /mnt/MyCloud
     echo "Mounting MyCloud failed during setup"
     exit 1
