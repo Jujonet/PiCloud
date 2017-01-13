@@ -21,6 +21,7 @@ function main(){
   # Create compressed backup of sd card image
   echo "Creating backup. This may take a while."
   if mountpoint -q /mnt/MyCloud; then
+    sync # Syncs files in cache
     dd if=/dev/mmcblk0 bs=64k | gzip > /mnt/MyCloud/images/"$(date +%FT%T)".gz
     echo "Backup complete at $(date +%FT%T)"
   else
